@@ -32,7 +32,25 @@ class SettingsForm {
     this.$scope.value = val
   }
 
-  setPriority(val) {
+  setPriority() {
+    let val = getLabelsColor();
+    switch (val) {
+      case 'green':
+        val = 0.1;
+        break;
+      case 'yellow':
+        val = 1;
+        break;
+      case 'orange':
+        val = 1.5;
+        break;
+      case 'red':
+        val = 2;
+        break;
+      default:
+        val = 1;
+        break;
+    }
     this.$priority.value = val
   }
 
@@ -45,7 +63,7 @@ class SettingsForm {
     let el = document.querySelector('input[name="show-badges"]:checked')
     return el ? JSON.parse(el.value) : true
   }
-  
+
   setPrependIcon(val) {
     let el = document.querySelector(`#prepend-icon-${val}`)
     if (el) el.checked = true
@@ -54,6 +72,22 @@ class SettingsForm {
   getPrependIcon() {
     let el = document.querySelector('input[name="prepend-icon"]:checked')
     return el ? JSON.parse(el.value) : false
+  }
+
+  setLabelsColor(){
+
+  }
+
+  getLabelsColor(){
+  var request = require("request");
+  var options = { method: 'GET',
+  url: 'https://trello.com/c/UfBiD2bH/1-por-valores-para-as-cores',
+  qs: { fields: 'color' } };
+
+  request(options, function (error, response, body) {
+     if (error) throw new Error(error);
+     console.log(body);}
+   );
   }
 
   listenToSubmit() {
@@ -67,7 +101,7 @@ class SettingsForm {
   handleSubmit() {
     this.$submitButton.disabled = true
 
-    return this.storage.setSettings({ 
+    return this.storage.setSettings({
       scope: this.$scope.value,
       priority: this.$priority.value,
       showBadges: this.getShowBadges(),
